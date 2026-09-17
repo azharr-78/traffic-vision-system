@@ -1,0 +1,54 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE / editor files
+.vscode/
+.idea/
+
+# Python environment files
+.env
+*.env
+
+# Generated output files
+output/*.mp4
+output/*.avi
+output/*.mov
+output/*.mkv
+output/*.json
+output/*.csv
+
+# YOLO model weights
+*.pt
+*.onnx
+
+# Input videos
+input/*.mp4
+input/*.avi
+input/*.mov
+input/*.mkv
+
+# Temporary files
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Coverage / testing
+.coverage
+htmlcov/
+.pytest_cache/

@@ -30,8 +30,6 @@ YOLO detection
    ↓
 Object tracking
    ↓
-Object filtering
-   ↓
 Line crossing count
    ↓
 Traffic analysis
@@ -49,6 +47,7 @@ Output video + reports
 - NumPy
 - CSV
 - JSON
+- Pytest
 
 
 ## Project Structure
@@ -56,30 +55,27 @@ Output video + reports
 ```text
 traffic-vision-system/
 ├── input/
-│   └── traffic.mp4
+│   └── README.md
 ├── output/
-│   ├── final.mp4
-│   ├── traffic_report.json
-│   └── traffic_report.csv
+│   └── README.md
 ├── src/
 │   ├── __init__.py
 │   ├── counter.py
 │   ├── detector.py
-│   ├── lane_detector.py
 │   ├── main.py
 │   ├── performance_monitor.py
 │   ├── report_generator.py
 │   ├── tracker.py
 │   ├── traffic_analyzer.py
-│   ├── utils.py
 │   └── video_processor.py
 ├── tests/
+│   ├── test_counter.py
+│   ├── test_performance_monitor.py
+│   └── test_traffic_analyzer.py
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
-├── statement.md
-└── yolo11n.pt
-```
+└── statement.md
 
 
 ## Main Modules
@@ -102,6 +98,11 @@ This module tracks processing time and FPS for the video analysis.
 ### `report_generator.py`
 This module creates the final CSV and JSON reports based on the counting results.
 
+## `tracker.py`
+
+This module is part of the project's tracking-related source structure.
+
+The object tracking used by the main pipeline is provided through the Ultralytics YOLO tracking functionality.
 
 ## Requirements
 
@@ -124,7 +125,7 @@ numpy
 ### 1. Clone the project
 
 ```powershell
-git clone <your-repository-url>
+git clone https://github.com/azharr-78/traffic-vision-system.git
 cd traffic-vision-system
 ```
 
@@ -185,23 +186,25 @@ python src/main.py \
     --input input/traffic.mp4 \
     --output output/final.mp4 \
     --confidence 0.5 \
-    --line-y 900
+    --line-y 800
 ```
 
 The counting line should be within the height of the input video.
 
+## EXAMPLE
+python src/main.py --input input/traffic.mp4 --output output/final.mp4 --confidence 0.5 --line-y 800
 
 ## How Counting Works
 
 The system uses the center point of each detected bounding box. If the center of an object crosses the horizontal line, it is counted once for that tracking ID.
 
 The logic is simple:
-
-- Store the previous position of each tracked object
-- Compare the current and previous Y-coordinates
-- If the object moves across the counting line, count it
-- Ignore duplicate counts for the same object ID
-
+1.The current center Y-coordinate is calculated.
+2.The previous center Y-coordinate is stored.
+3.The current and previous positions are compared with the counting line.
+4.If the object moves across the line, it is counted.
+5.The tracking ID is stored in a set.
+6.If the same tracking ID crosses the line again, it is not counted again.
 
 ## Traffic Analysis
 
@@ -244,7 +247,24 @@ The JSON file includes summary values such as:
 ### CSV report
 The CSV report contains the same main statistics in a table format that can be opened in spreadsheet software.
 
+### Testing
 
+The project contains unit tests for the main supporting modules.
+
+Run the tests using:
+
+      python -m pytest
+
+The tests cover:
+
+Object counter initialization
+Counting-line configuration
+Traffic analyzer initialization
+Traffic analyzer statistics
+Performance monitor initialization
+Performance monitor execution
+
+The tests verify the basic behavior of the supporting modules without requiring the complete video-processing pipeline for every test.
 
 ## Example Result
 
